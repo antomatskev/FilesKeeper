@@ -13,11 +13,12 @@ Files Keeper
 <h2>Welcome, {{user}}</h2>
 <a href="{{ url_for('logout') }}">Log Out</a>
 <h3>Upload your file</h3>
-<form method="POST" enctype="multipart/form-data" action="/upload">
-    <input type="file" name="file">
+<!-- <form method="POST" enctype="multipart/form-data" action="/upload"> -->
+<form id="file-upload-form">
+    <input type="file" id="file-input" name="file">
     <input type="submit" value="Upload">
 </form>
-<table>
+<table id="file-list">
 	<thead>
 		<tr>
 			<th><a href="{{ url_for('sort_files', sort_by='name', sort_order='asc') }}">Name</a></th>
@@ -41,4 +42,5 @@ Files Keeper
 		{% endfor %}
 	</tbody>
 </table>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

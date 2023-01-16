@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, send_from_directory, session
+from flask import Flask, render_template, redirect, url_for, request, send_from_directory, session, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
@@ -85,15 +85,34 @@ def logout():
 		logout_user()
 		return redirect(url_for('index'))
 
-@app.route('/upload', methods=['GET', 'POST'])
+# @app.route('/upload', methods=['GET', 'POST'])
+# def upload_old():
+# 	file = request.files['file']
+# 	if file:
+# 		filename = file.filename
+# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+# 		return '<h2>The file has been uploaded! <a href="/">Go back!</a></h2>'
+# 	else:
+# 		return redirect(url_for('index'))
+
+@app.route('/upload', methods=['POST'])
 def upload():
 	file = request.files['file']
-	if file: # and allowed_file(file.filename):
-		filename = file.filename #secure_filename(file.filename)
+	if file:
+		filename = file.filename
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		return '<h2>The file has been uploaded! <a href="/">Go back!</a></h2>'
+		files_data = []
+		for file in os.listdir(app.config['UPLOAD_FOLDER']):
+			file_data = {}
+			file_path = os.path.join(app.config['UPLOAD_FOLDER'], file)
+			file_data['name'] = file
+			file_data['mimetype'], file_data['encoding'] = mimetypes.guess_type(file_path)
+			file_data['upload_time'] = datetime.fromtimestamp(os.path.getctime(file_path))
+			file_data['size'] = os.path.getsize(file_path)
+			files_data.append(file_data)
+		return jsonify(files_data)
 	else:
-		return redirect(url_for('index'))
+		return 'No file selected', 400
 
 @app.route('/download/<path:filename>')
 def download_file(filename):
