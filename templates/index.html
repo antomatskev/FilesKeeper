@@ -1,0 +1,44 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Files Keeper
+{% endblock %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='tacit.css')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+{% endblock %}
+{% block content %}
+<h1>Files Keeper</h1>
+<h2>Welcome, {{user}}</h2>
+<a href="{{ url_for('logout') }}">Log Out</a>
+<h3>Upload your file</h3>
+<form method="POST" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
+<table>
+	<thead>
+		<tr>
+			<th><a href="{{ url_for('sort_files', sort_by='name', sort_order='asc') }}">Name</a></th>
+			<th>Mime</th>
+			<th><a href="{{ url_for('sort_files', sort_by='upload_time', sort_order='asc') }}">Uploaded</a></th>
+			<th><a href="{{ url_for('sort_files', sort_by='size', sort_order='asc') }}">Size</a></th>
+			<th>^_+_^</th>
+			<th><--X--></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for file in files %}
+		<tr>
+			<td>{{ file.name }}</td>
+			<td>{{ file.mimetype }}</td>
+			<td>{{ file.upload_time }}</td>
+			<td>{{ file.size }}</td>
+			<td><a href="{{url_for('download_file', filename=file.name)}}">Download</a></td>
+			<td><a href="{{url_for('remove_file', filename=file.name)}}">Remove</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
