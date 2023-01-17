@@ -25,7 +25,7 @@ This report covers Files Keeper application hosted with replit service. The appl
 
 ## Methodology
 For testing five requirements from OWASP ASVS are used:
-1. Sanitization and Sandboxing: 5.2.5 Verify that the application protects against template injection attacks by ensuring that any user input being included is sanitized or sandboxed. File name "}<IMG SRC=# onmouseover=&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#120;&#120;&#115;&#39;&#41;>.txt" invokes an alert on hovering a mouse over it right after any file is uploaded;
+1. Sanitization and Sandboxing: 5.2.5 Verify that the application protects against template injection attacks by ensuring that any user input being included is sanitized or sandboxed. File name `}<IMG SRC=# onmouseover=&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#120;&#120;&#115;&#39;&#41;>.txt` invokes an alert on hovering a mouse over it right after any file is uploaded;
 2. File Execution: 12.3 **TODO**
 3. Password Security: 2.1 **TODO**
 4. Session Termination: 3.3.1: After logging out the session cookie doesn't get invalidated and can be used to resume an authenticated session. **TODO**
@@ -40,4 +40,5 @@ Options: 1.2.3, 1.12.2,
 
 ## Appendices
 1. OWASP ASVS Latest Stable Version - https://github.com/OWASP/ASVS/tree/v4.0.3#latest-stable-version---403
-2. 
+2. XSS Filter Evasion - https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html
+3. 
