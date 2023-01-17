@@ -85,21 +85,16 @@ def logout():
 		logout_user()
 		return redirect(url_for('index'))
 
-# @app.route('/upload', methods=['GET', 'POST'])
-# def upload_old():
-# 	file = request.files['file']
-# 	if file:
-# 		filename = file.filename
-# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-# 		return '<h2>The file has been uploaded! <a href="/">Go back!</a></h2>'
-# 	else:
-# 		return redirect(url_for('index'))
-
 @app.route('/upload', methods=['POST'])
 def upload():
 	file = request.files['file']
 	if file:
 		filename = file.filename
+		if filename in os.listdir(app.config['UPLOAD_FOLDER']):
+			if '.' in filename:
+				filename = filename.split('.')[0] + '-copy.' + filename.split('.')[1]
+			else:
+				filename = filename + '-copy'
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 		files_data = []
 		for file in os.listdir(app.config['UPLOAD_FOLDER']):
