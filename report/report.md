@@ -43,7 +43,7 @@ No compliance requirements have been considered during the test, as the applicat
 ### Vulnerabilities
 1. Secure File Upload Architecture (ASVS 1.12.2). All uploaded files are stored on the same server, instead of using an unrelated cloud file storage bucket. Also, no Content Security Policy implemented. This can lead to XSS attacks, which has high likelihood;
 2. Password Security (ASVS 2.1). Almost all ASVS requirements under section 2.1 aren't implemented, except from 2.1.3, 2.1.4, 2.1.9, 2.1.10. Overall, password standards have been ignored during the development process. Violating this section allows attackers to easily perform password attacks, which has high likelihood;
-3. Session Termination (ASVS 3.3.1). After logging out the session cookie doesn't get invalidated and can be used to resume an authenticated session by attackers. This could have high impact, as it allows to impersonate another users, but the system doesn't have different account privileges, nor users actions are logged. Therefore, the impact is moderate, as the likelihood is high (attackers will need to find a way to get users cookies, and there is one: see the next point);
+3. Session Termination (ASVS 3.3.1). After logging out the session cookie doesn't get invalidated and can be used to resume an authenticated session by attackers. This could have high impact, as it allows to impersonate another users, but the system doesn't have different account privileges, nor users actions are logged. Therefore, the impact is medium, as the likelihood is high (attackers will need to find a way to get users cookies, and there is one: see the next point);
 4. Sanitization and Sandboxing (ASVS 5.2.5). File name `}<IMG SRC=# onmouseover=&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#120;&#120;&#115;&#39;&#41;>.txt` invokes an alert on hovering a mouse over it right after any file is uploaded. The impact is high allowing attackers to steal users cookies to impersonate them later. The likelihood is also high;
 5. File Upload (ASVS 12.1.1). Uploading large files to fill up the storage makes the files uploading service unavailable. This has very high impact, because of Denial of Service possibility. The likelihood is also very high, because the server storage is relatively small;
 
@@ -55,7 +55,8 @@ Also, there is `uploads` directory in the replit, which contains all the stored 
 3. This will be described in the next section;
 4. On the screenshot the alert with text "xss" can be seen, which appears after hovering the cursor over the uploaded file with the name `}<IMG SRC=# onmouseover=&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#120;&#120;&#115;&#39;&#41;>.txt`: ![poc 4](https://raw.githubusercontent.com/antomatskev/FilesKeeper/main/report/poc-4.png)
 5. After the storage gets filled the application itself doesn't indicate any issues, but the logs have an exception:
-`172.31.128.1 - - [18/Jan/2023 10:48:00] "POST /upload HTTP/1.1" 200 -
+```
+172.31.128.1 - - [18/Jan/2023 10:48:00] "POST /upload HTTP/1.1" 200 -
 172.31.128.1 - - [18/Jan/2023 10:48:00] "GET / HTTP/1.1" 200 -
 [2023-01-18 10:52:59,466] ERROR in app: Exception on /upload [POST]
 Traceback (most recent call last):
@@ -74,7 +75,8 @@ Traceback (most recent call last):
   File "/nix/store/2vm88xw7513h9pyjyafw32cps51b0ia1-python3-3.8.12/lib/python3.8/shutil.py", line 208, in copyfileobj
     fdst_write(buf)
 OSError: [Errno 122] Disk quota exceeded
-172.31.128.1 - - [18/Jan/2023 10:52:59] "POST /upload HTTP/1.1" 500 -`
+172.31.128.1 - - [18/Jan/2023 10:52:59] "POST /upload HTTP/1.1" 500 -
+```
 
 ### Proof-of-concepts
 1. No PoC available;
@@ -104,13 +106,28 @@ OSError: [Errno 122] Disk quota exceeded
    3. Make sure after that no new files can be uploaded to the website
 
 ### Severity
+1. Severity of this issue itself is Medium, but it causes another issues;
+2. Severity of this issue is High allowing attackers to perform successful passwords attacks;
+3. Severity of this issue is Low, as impersonating another account in the current system doesn't give anything;
+4. Severity of this issue is High allowing to steal cookies from another users;
+5. Severity of this issue is High allowing to perform DoS;
 
 ### CVSS
+1. No CVSS;
+2. 7.5;
+3. 6.5;
+4. 7.5;
+5. 7.5;
 
 ### Recommendations
-
+1. Use some cloud storage for storing uploaded files (i.e. AWS bucket);
+2. Set up password policy and change the source code accrodingly;
+3. Tweak logging out functinoality to invalidate a user's cookie;
+4. Tweak main.js code, so it won't clear the table and build it again by its own, but use the flask template rendering for that;
+5. Tweak file uploading functionality so it will check the size of uploaded files, also add exceptions handling, so users would be notified if file upload fails;
 
 ## Appendices
 1. OWASP ASVS Latest Stable Version - https://github.com/OWASP/ASVS/tree/v4.0.3#latest-stable-version---403
 2. XSS Filter Evasion - https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html
-3. 
+3. Files Keeper - https://fileskeeper.antomatskev.repl.co/
+4. CVSS Calculator - https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator
