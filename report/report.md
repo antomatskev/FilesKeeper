@@ -48,6 +48,13 @@ No compliance requirements have been considered during the test, as the applicat
 5. File Upload (ASVS 12.1.1). Uploading large files to fill up the storage makes the files uploading service unavailable. This has very high impact, because of Denial of Service possibility. The likelihood is also very high, because the server storage is relatively small;
 
 ### Supporting Evidence
+1. As it is White Box testing, the pentester has access to the system and sees the file storing implementation in the source-code:
+`file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))`
+Also, there is `uploads` directory in the replit, which contains all the stored files;
+2. This issue is seen also from the source-code: `password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])` and from the prompt visible during registration process: ![poc 2](https://github.com/antomatskev/FilesKeeper/report/poc-2.png?raw=true)
+3. This will be described in the next section;
+4. On the screenshot the alert with text "xss" can be seen, which appears after hovering the cursor over the uploaded file with the name `}<IMG SRC=# onmouseover=&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#120;&#120;&#115;&#39;&#41;>.txt`: ![poc 4](https://github.com/antomatskev/FilesKeeper/report/poc-4.png?raw=true)
+5. After the storage gets filled the application itself doesn't indicate any issues, but the logs have an exception: ``
 
 ### Proof-of-concepts
 
