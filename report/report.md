@@ -14,13 +14,13 @@ The goal of this report is to test Files Keeper application against five ASVS re
 This report covers Files Keeper application hosted with replit service. The application's URL is https://fileskeeper.antomatskev.repl.co/ 
 
 ### Findings
-**TODO**
+There are five findings which correspond to OWASP ASVS 1.12.2, 2.1, 3.3.1, 5.2.5, and 12.1.1.
 
 ### Recommendations
-**TODO**
+Overall recommendations are to use some cloud storage for storing files, tweak registration, logging out and file upload functionality.
 
 ### Overall Assessment
-**TODO**
+As the system is simple and doesn't have different users privileges, some findings don't have a severity they usually could have. Therefore fixing the mentioned issues would make the application much safer and the service more stable.
 
 ## Methodology
 ### Testing Scope
